@@ -106,9 +106,9 @@ namespace mhw_4slots
                         //Find 4 slots decoration with itself first
                         {
                             Decoration tempDecoration = _DecorationList
-                                                        .FirstOrDefault(dec => dec.Skills.Select(s => s.Name)
-                                                                                    .SequenceEqual(new string[] { expectedSkill.Name, "null" }) &&
-                                                                                    dec.Level == 4);
+                                                        .FirstOrDefault(dec => dec.Level == 4 &&
+                                                                                    dec.Skills.Count() == 1 &&
+                                                                                    dec.Skills[0].Name == expectedSkill.Name);
                             if (tempDecoration != null)
                             {
                                 set.AddDecoration(tempDecoration);
@@ -122,7 +122,8 @@ namespace mhw_4slots
                         //Search from higher level to lower level
                         foreach (Skill subExpectedSkill in
                                                     _DecorationList.Where(dec => dec.Level < 4 &&
-                                                                                set.RemainingExpectation.Select(re => re.Name)
+                                                                                set.RemainingExpectation.Where(re => re.Level > 0)
+                                                                                    .Select(re => re.Name)
                                                                                     .Intersect(dec.Skills.Select(s => s.Name))
                                                                                     .Any()).Select(dec => dec.Skills[0]))
                         {

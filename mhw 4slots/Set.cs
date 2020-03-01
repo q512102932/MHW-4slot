@@ -75,10 +75,9 @@ namespace mhw_4slots
             _Slots = new List<Slot>(slots);
             Expectation = expectation;
 
-            RemainingExpectation = RemainingExpectation.ToList()
-                                            .OrderBy(skill => decorations
-                                            .First(dec => dec.Skills.Select(s => s.Name).Contains(skill.Name)
-                                            )).ToArray();
+            RemainingExpectation = RemainingExpectation
+                                            .OrderBy(skill => decorations.Where(dec => dec.Level != 4).Select(dec => dec.Skills[0].Name).ToList().IndexOf(skill.Name))
+                                            .ToArray();
         }
 
         public override string ToString()
@@ -104,7 +103,7 @@ namespace mhw_4slots
         }
         public void AddDecoration(Decoration decoration)
         {
-            if (_Slots.Any(s => s.Level <= decoration.Level && s.Decoration == null))
+            if (_Slots.Any(s => decoration.Level <= s.Level && s.Decoration == null))
             {
                 _Slots[_Slots.FindIndex(s => s.Level >= decoration.Level && s.Decoration == null)]
                     .Decoration = decoration;
