@@ -56,28 +56,19 @@ namespace mhw_4slots
         {
             get
             {
-                if (_RemainingExpectation == null)
-                    _RemainingExpectation = Expectation;
-                Skill[] remainingExpectation = JsonConvert.DeserializeObject<Skill[]>(JsonConvert.SerializeObject(_RemainingExpectation));
+                Skill[] remainingExpectation = JsonConvert.DeserializeObject<Skill[]>(JsonConvert.SerializeObject(Expectation));
                 foreach (KeyValuePair<string, int> skill in _Skills)
                 {
                     remainingExpectation.First(s => s.Name == skill.Key).Level -= skill.Value;
                 }
                 return remainingExpectation.ToArray();
             }
-            private set
-            {
-                _RemainingExpectation = value;
-            }
         }
-        public Set(Slot[] slots, Skill[] expectation, List<Decoration> decorations)
+        public Set(Slot[] slots, Skill[] expectation)
         {
             _Slots = new List<Slot>(slots);
             Expectation = expectation;
 
-            RemainingExpectation = RemainingExpectation
-                                            .OrderBy(skill => decorations.Where(dec => dec.Level != 4).Select(dec => dec.Skills[0].Name).ToList().IndexOf(skill.Name))
-                                            .ToArray();
         }
 
         public override string ToString()
@@ -88,6 +79,18 @@ namespace mhw_4slots
                 sb.Append(string.Format("Skill {0} Level {1}\r\n", s.Key, s.Value));
             }
             return sb.ToString();
+        }
+
+        public bool ValidateSkillWithExpectation()
+        {
+            foreach (Skill expectedSkill in Expectation)
+            {
+                if (_Skills.All(skill => skill.Key != expectedSkill.Name))
+                    return false;
+                if (_Skills.FirstOrDefault(Skill => Skill.Key == expectedSkill.Name).Value < expectedSkill.Level)
+                    return false;
+            }
+            return true;
         }
 
         [Obsolete]

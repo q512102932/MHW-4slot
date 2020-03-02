@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Sirius\\Projects\\mhw 4slots\\mhw 4slots.csproj": {}
+    "E:\\Sirius\\Projects\\git hub\\MHW-4slot\\mhw 4slots\\mhw 4slots.csproj": {}
   },
   "projects": {
-    "E:\\Sirius\\Projects\\mhw 4slots\\mhw 4slots.csproj": {
+    "E:\\Sirius\\Projects\\git hub\\MHW-4slot\\mhw 4slots\\mhw 4slots.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Sirius\\Projects\\mhw 4slots\\mhw 4slots.csproj",
+        "projectUniqueName": "E:\\Sirius\\Projects\\git hub\\MHW-4slot\\mhw 4slots\\mhw 4slots.csproj",
         "projectName": "mhw 4slots",
-        "projectPath": "E:\\Sirius\\Projects\\mhw 4slots\\mhw 4slots.csproj",
+        "projectPath": "E:\\Sirius\\Projects\\git hub\\MHW-4slot\\mhw 4slots\\mhw 4slots.csproj",
         "packagesPath": "C:\\Users\\q5121\\.nuget\\packages\\",
-        "outputPath": "E:\\Sirius\\Projects\\mhw 4slots\\obj\\",
+        "outputPath": "E:\\Sirius\\Projects\\git hub\\MHW-4slot\\mhw 4slots\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
