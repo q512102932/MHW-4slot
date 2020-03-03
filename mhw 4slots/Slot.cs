@@ -16,7 +16,9 @@ namespace mhw_4slots
             get { return _Decoration; }
             set
             {
-                if (value.Level <= Level)
+                if (value == null)
+                    _Decoration = null;
+                else if (value.Level <= Level)
                 {
                     _Decoration = value;
                 }

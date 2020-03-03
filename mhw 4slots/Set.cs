@@ -47,10 +47,9 @@ namespace mhw_4slots
             }
         }
 
-        public Slot[] RemainingSlots
-        {
-            get { return _Slots.Where(s => s.Decoration == null).ToArray(); }
-        }
+        public Slot[] RemainingSlots => _Slots.Where(s => s.Decoration == null).ToArray();
+
+        public Slot[] SlotsWithDecoration => _Slots.Where(slot => slot.Decoration != null).ToArray();
 
         public Skill[] RemainingExpectation
         {
@@ -68,7 +67,6 @@ namespace mhw_4slots
         {
             _Slots = new List<Slot>(slots);
             Expectation = expectation;
-
         }
 
         public override string ToString()
@@ -112,12 +110,23 @@ namespace mhw_4slots
                     .Decoration = decoration;
             }
         }
+        public void ChangeDecoration(int slotIndex, Decoration decoration)
+        {
+            _Slots[slotIndex].Decoration = decoration;
+        }
 
+        public void ChangeDecoraiton(string decorationName, Decoration decoration)
+        {
+            if (SlotsWithDecoration.Any(slot => slot.Decoration.Name == decorationName))
+            {
+                SlotsWithDecoration.First(slot => slot.Decoration.Name == decorationName).Decoration = decoration;
+            }
+        }
         public int IsSkillRequired(string skillName)
         {
-            if (!RemainingExpectation.Any(ex => ex.Name != skillName))
+            if (RemainingExpectation.Any(ex => ex.Name != skillName))
             {
-                throw new Exception("Cannot ifnd Skill in the expectation");
+                return 0;
             }
             return RemainingExpectation.First(s => s.Name == skillName).Level;
         }
