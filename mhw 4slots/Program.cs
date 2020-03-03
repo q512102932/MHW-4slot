@@ -52,10 +52,8 @@ namespace mhw_4slots
                         else
                         {
                             decoration.Skills = new Skill[] {
-                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1), 
-                                                Level = Convert.ToInt32(splitData[1].Substring(splitData[1].Length-1,1)) },
-                                new Skill() { Name = splitData[2].Substring(0,splitData[2].Length-1), 
-                                                Level = Convert.ToInt32(splitData[2].Substring(splitData[2].Length-1,1)) }
+                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1), Level = 1},
+                                new Skill() { Name = splitData[2].Substring(0,splitData[2].Length-1), Level = 1}
                             };
                         }
                     }
