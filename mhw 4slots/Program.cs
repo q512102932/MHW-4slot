@@ -34,10 +34,6 @@ namespace mhw_4slots
                 while ((data = streamReader.ReadLine()) != null)
                 {
                     string[] splitData = data.Split(',');
-                    if (data.Contains("攻撃珠"))
-                    {
-
-                    }
                     //ex.火炎珠【1】,火属性攻撃強化1,
                     Decoration decoration = new Decoration()
                     {
@@ -49,14 +45,17 @@ namespace mhw_4slots
                         if (splitData[2] == "null" || splitData[2] == string.Empty)
                         {
                             decoration.Skills = new Skill[] {
-                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1), Level = 2 }
+                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1),
+                                                Level = Convert.ToInt32(splitData[1].Substring(splitData[1].Length-1,1)) }
                             };
                         }
                         else
                         {
                             decoration.Skills = new Skill[] {
-                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1), Level = 1 },
-                                new Skill() { Name = splitData[2].Substring(0,splitData[2].Length-1), Level = 1 }
+                                new Skill() { Name = splitData[1].Substring(0,splitData[1].Length-1), 
+                                                Level = Convert.ToInt32(splitData[1].Substring(splitData[1].Length-1,1)) },
+                                new Skill() { Name = splitData[2].Substring(0,splitData[2].Length-1), 
+                                                Level = Convert.ToInt32(splitData[2].Substring(splitData[2].Length-1,1)) }
                             };
                         }
                     }
@@ -199,7 +198,7 @@ namespace mhw_4slots
                         fourSlotsflag = true;
                     }
                 }
-                else if (Set.RemainingSlots.Count() > 0)
+                else if (Set.RemainingSlots.Count() > 0 && expectedSkill != null)
                 {
                     //Find with <3 slot
                     Decoration tempDecoration = _DecorationList
@@ -211,7 +210,7 @@ namespace mhw_4slots
                         fourSlotsflag = true;
                     }
                 }
-                if (!fourSlotsflag)
+                if (!fourSlotsflag || expectedSkill == null)
                 {
                     break;
                 }
@@ -247,6 +246,7 @@ namespace mhw_4slots
                     new Slot(){Level=4},
                     new Slot(){Level=4},
                     new Slot(){Level=4},
+                    new Slot(){Level=4},
                     new Slot(){Level=4}
                 },
                 new Skill[]{
@@ -258,7 +258,7 @@ namespace mhw_4slots
                     new Skill(){Name="抜刀術【技】",Level=1},
                     new Skill(){Name="耐震",Level=1},
                     new Skill(){Name="集中",Level=1},
-                    new Skill(){Name="匠",Level=1}
+                    new Skill(){Name="匠",Level=2}
                 }
             );
         }
