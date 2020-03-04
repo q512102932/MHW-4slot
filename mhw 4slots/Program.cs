@@ -161,8 +161,25 @@ namespace mhw_4slots
                     _LevelFourDecorationList.Any(dec => dec.Skills.Select(s => s.Name).Any(s => s == expectedSkill.Name)) &&
                     Set.RemainingSlots.Any(slot => slot.Level == 4 && slot.Decoration == null))
                 {
-                    //Find 4 slots decoration with itself first if 2 or more skill points required
-                    if (expectedSkill.Level >= 2)
+                    //Find 4 slots decoration with itself first if 3 or more skill points required
+                    //and if this skill has a 3 skill points worth level 4 decoration
+                    if (expectedSkill.Level >= 3 &&
+                        _DecorationList.Any(dec => dec.Level == 4 &&
+                                                    dec.Skills.Count() == 1 &&
+                                                    dec.Skills[0].Name == expectedSkill.Name &&
+                                                    dec.Name.Contains("III")
+                                                    ))
+                    {
+                        Set.AddDecoration(_DecorationList.First(dec => dec.Level == 4 &&
+                                                    dec.Skills.Count() == 1 &&
+                                                    dec.Skills[0].Name == expectedSkill.Name &&
+                                                    dec.Name.Contains("III")));
+                        fourSlotsflag = true;
+                        continue;
+                    }
+                    //2 or more skill points required
+                    //and if this skill has a 2 skill points worth level 4 decoration 
+                    else if (expectedSkill.Level >= 2)
                     {
                         Decoration tempDecoration = _DecorationList
                                                     .FirstOrDefault(dec => dec.Level == 4 &&
@@ -234,13 +251,19 @@ namespace mhw_4slots
         {
             Set = new Set(
                 new Slot[]{
-                    new Slot(){Level=1},
-                    new Slot(){Level=1},
-                    new Slot(){Level=1},
-                    new Slot(){Level=2},
-                    new Slot(){Level=2},
-                    new Slot(){Level=4},
-                    new Slot(){Level=4},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+
                     new Slot(){Level=4},
                     new Slot(){Level=4},
                     new Slot(){Level=4},
@@ -248,18 +271,24 @@ namespace mhw_4slots
                     new Slot(){Level=4}
                 },
                 new Skill[]{
-                    new Skill(){Name="攻撃",Level=4},
-                    new Skill(){Name="体力増強",Level=3},
-                    new Skill(){Name="納刀術",Level=2},
-                    new Skill(){Name="精霊の加護",Level=1},
-                    new Skill(){Name="超会心",Level=3},
-                    new Skill(){Name="抜刀術【技】",Level=1},
-                    new Skill(){Name="耐震",Level=1},
-                    new Skill(){Name="集中",Level=1},
-                    new Skill(){Name="匠",Level=2}
+                    new Skill(){Name="氷耐性",Level=3},
+                    new Skill(){Name="フルチャージ",Level=1},
+                    new Skill(){Name="キノコ大好き",Level=1},
+                    new Skill(){Name="見切り",Level=1},
+                    new Skill(){Name="氷属性攻撃強化",Level=2},
+                    new Skill(){Name="弱点特効",Level=1},
+                    new Skill(){Name="睡眠ビン追加",Level=2},
+                    new Skill(){Name="匠",Level=1},
+                    new Skill(){Name="麻痺ビン追加",Level=1},
+                    new Skill(){Name="属性解放／装填拡張",Level=1},
+                    new Skill(){Name="通常弾・通常矢強化",Level=1},
+                    new Skill(){Name="龍封力強化",Level=4},
+                    new Skill(){Name="爆破ビン追加",Level=1},
+                    new Skill(){Name="毒ビン追加",Level=1}
                 }
             );
         }
+
         static bool FourSlotsCalculation(Skill skill, Set set, IEnumerable<Skill> searchSkillList, SetSearchCriteria setSearchCriteria)
         {
             switch (setSearchCriteria)
@@ -320,7 +349,9 @@ namespace mhw_4slots
 
             //switching slot from the lower skill of a decoration
             foreach (Decoration decoration in set.SlotsWithDecoration
-                                                    .Where(s => s.Decoration.Level == 4 && s.Decoration.Skills[0].Name != skill.Name)
+                                                    .Where(s => s.Decoration.Level == 4 &&
+                                                                s.Decoration.Skills.Count() > 1 &&
+                                                                s.Decoration.Skills[0].Name != skill.Name)
                                                     .Select(s => s.Decoration))
             {
                 if (_LevelFourDecorationList
@@ -342,7 +373,9 @@ namespace mhw_4slots
             }
             //switching slot from the higher skill of a decoration
             foreach (Decoration decoration in set.SlotsWithDecoration
-                                                    .Where(s => s.Decoration.Level == 4 && s.Decoration.Skills[0].Name != skill.Name)
+                                                    .Where(s => s.Decoration.Level == 4 &&
+                                                                s.Decoration.Skills.Count() > 1 &&
+                                                                s.Decoration.Skills[1].Name != skill.Name)
                                                     .Select(s => s.Decoration))
             {
                 if (_LevelFourDecorationList
@@ -356,7 +389,7 @@ namespace mhw_4slots
                     //Put the new decoration in
                     set.AddDecoration(_LevelFourDecorationList
                                         .First(lfd => lfd.Skills.Select(s => s.Name).Contains(skill.Name) &&
-                                                    lfd.Skills.Select(s => s.Name).Contains(decoration.Skills[1].Name)));
+                                                    lfd.Skills.Select(s => s.Name).Contains(decoration.Skills[0].Name)));
                     //Replace the old decoration with an empty one
                     set.ChangeDecoraiton(decoration.Name, null);
                     return FourSlotsCalculation(decoration.Skills[0], set, searchSkillList, setSearchCriteria);
