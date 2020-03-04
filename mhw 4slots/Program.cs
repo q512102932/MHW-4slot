@@ -192,8 +192,15 @@ namespace mhw_4slots
                             continue;
                         }
                     }
-                    fourSlotsflag = FourSlotsCalculation(expectedSkill, Set, searchSkillList, setSearchCriteria);
-
+                    try
+                    {
+                        fourSlotsflag = FourSlotsCalculation(expectedSkill, Set, searchSkillList, setSearchCriteria, new List<string>());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        break;
+                    }
                     //Find with <3 slot
                     if (!fourSlotsflag)
                     {
@@ -247,8 +254,9 @@ namespace mhw_4slots
             }
         }
 
-        static bool FourSlotsCalculation(Skill skill, Set set, IEnumerable<Skill> searchSkillList, SetSearchCriteria setSearchCriteria)
+        static bool FourSlotsCalculation(Skill skill, Set set, IEnumerable<Skill> searchSkillList, SetSearchCriteria setSearchCriteria, List<string> usedSkillList)
         {
+            usedSkillList.Add(skill.Name);
             switch (setSearchCriteria)
             {
                 case SetSearchCriteria.HH:
@@ -298,11 +306,20 @@ namespace mhw_4slots
                     return true;
                 }
             }
+            //Put in the respective slot first
+            if (set.RemainingSlots.Any(slot => slot.Level == _DecorationList.First(dec => dec.Level < 4 && dec.Skills[0].Name == skill.Name).Level))
+            {
+                set.AddDecoration(_DecorationList.First(dec => dec.Level < 4 && dec.Skills[0].Name == skill.Name));
+                return true;
+            }
+
+
             //switching slot from the lower skill of a decoration
             foreach (Decoration decoration in set.SlotsWithDecoration
                                                     .Where(s => s.Decoration.Level == 4 &&
                                                                 s.Decoration.Skills.Count() > 1 &&
-                                                                s.Decoration.Skills[0].Name != skill.Name)
+                                                                s.Decoration.Skills[0].Name != skill.Name &&
+                                                                !usedSkillList.Contains(s.Decoration.Skills[0].Name))
                                                     .Select(s => s.Decoration))
             {
                 if (_LevelFourDecorationList
@@ -319,14 +336,15 @@ namespace mhw_4slots
                                                     lfd.Skills.Select(s => s.Name).Contains(decoration.Skills[1].Name)));
                     //Replace the old decoration with an empty one
                     set.ChangeDecoraiton(decoration.Name, null);
-                    return FourSlotsCalculation(decoration.Skills[0], set, searchSkillList, setSearchCriteria);
+                    return FourSlotsCalculation(decoration.Skills[0], set, searchSkillList, setSearchCriteria, usedSkillList);
                 }
             }
             //switching slot from the higher skill of a decoration
             foreach (Decoration decoration in set.SlotsWithDecoration
                                                     .Where(s => s.Decoration.Level == 4 &&
                                                                 s.Decoration.Skills.Count() > 1 &&
-                                                                s.Decoration.Skills[1].Name != skill.Name)
+                                                                s.Decoration.Skills[1].Name != skill.Name &&
+                                                                !usedSkillList.Contains(s.Decoration.Skills[0].Name))
                                                     .Select(s => s.Decoration))
             {
                 if (_LevelFourDecorationList
@@ -343,7 +361,7 @@ namespace mhw_4slots
                                                     lfd.Skills.Select(s => s.Name).Contains(decoration.Skills[0].Name)));
                     //Replace the old decoration with an empty one
                     set.ChangeDecoraiton(decoration.Name, null);
-                    return FourSlotsCalculation(decoration.Skills[0], set, searchSkillList, setSearchCriteria);
+                    return FourSlotsCalculation(decoration.Skills[0], set, searchSkillList, setSearchCriteria, usedSkillList);
                 }
             }
             return false;
@@ -353,39 +371,24 @@ namespace mhw_4slots
         {
             Set = new Set(
                 new Slot[]{
-                    new Slot(){Level=1},
-
-                    new Slot(){Level=2},
-                    new Slot(){Level=2},
-                    new Slot(){Level=2},
-                    new Slot(){Level=2},
-                    new Slot(){Level=2},
-
-
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-
                     new Slot(){Level=4},
-                    new Slot(){Level=4}
+new Slot(){Level=4},
+new Slot(){Level=4},
+new Slot(){Level=4},
+new Slot(){Level=4},
+new Slot(){Level=3},
+new Slot(){Level=1},
                 },
                 new Skill[]{
-                    new Skill(){Name="属性やられ耐性",Level=1},
-                    new Skill(){Name="属性解放／装填拡張",Level=1},
-                    new Skill(){Name="回避距離UP",Level=1},
-                    new Skill(){Name="攻撃",Level=1},
-                    new Skill(){Name="毒ビン追加",Level=1},
-                    new Skill(){Name="麻痺ビン追加",Level=2},
-                    new Skill(){Name="龍封力強化",Level=1},
-                    new Skill(){Name="ひるみ軽減",Level=1},
-                    new Skill(){Name="抜刀術【技】",Level=1},
-                    new Skill(){Name="無属性強化",Level=1},
-                    new Skill(){Name="火事場力",Level=1},
-                    new Skill(){Name="砲弾装填数UP",Level=1},
-                    new Skill(){Name="ランナー",Level=1},
-                    new Skill(){Name="雷耐性",Level=1},
+new Skill(){Name="滑走強化",Level=1 },
+new Skill(){Name="体術",Level=1 },
+new Skill(){Name="属性やられ耐性",Level=1 },
+new Skill(){Name="属性解放／装填拡張",Level=3 },
+new Skill(){Name="スタミナ奪取",Level=1 },
+new Skill(){Name="オトモへの采配",Level=2 },
+new Skill(){Name="飛燕",Level=1 },
+new Skill(){Name="貫通弾・竜の一矢強化",Level=1 },
+new Skill(){Name="追跡の達人",Level=1 }
                 }
             );
         }

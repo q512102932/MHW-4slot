@@ -104,12 +104,26 @@ namespace mhw_4slots
         }
         public void AddDecoration(Decoration decoration)
         {
+            if (AddDecoration(decoration, decoration.Level))
+                return;
+
             if (_Slots.Any(s => decoration.Level <= s.Level && s.Decoration == null))
             {
                 _Slots[_Slots.FindIndex(s => s.Level >= decoration.Level && s.Decoration == null)]
                     .Decoration = decoration;
             }
         }
+        public bool AddDecoration(Decoration decoration, int slot)
+        {
+            if (_Slots.Any(s => slot == s.Level && s.Decoration == null))
+            {
+                _Slots[_Slots.FindIndex(s => s.Level == slot && s.Decoration == null)]
+                    .Decoration = decoration;
+                return true;
+            }
+            return false;
+        }
+
         public void ChangeDecoration(int slotIndex, Decoration decoration)
         {
             _Slots[slotIndex].Decoration = decoration;
