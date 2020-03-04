@@ -247,48 +247,6 @@ namespace mhw_4slots
             }
         }
 
-        static void ReSetSet()
-        {
-            Set = new Set(
-                new Slot[]{
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-                    new Slot(){Level=3},
-
-                    new Slot(){Level=4},
-                    new Slot(){Level=4},
-                    new Slot(){Level=4},
-                    new Slot(){Level=4},
-                    new Slot(){Level=4}
-                },
-                new Skill[]{
-                    new Skill(){Name="氷耐性",Level=3},
-                    new Skill(){Name="フルチャージ",Level=1},
-                    new Skill(){Name="キノコ大好き",Level=1},
-                    new Skill(){Name="見切り",Level=1},
-                    new Skill(){Name="氷属性攻撃強化",Level=2},
-                    new Skill(){Name="弱点特効",Level=1},
-                    new Skill(){Name="睡眠ビン追加",Level=2},
-                    new Skill(){Name="匠",Level=1},
-                    new Skill(){Name="麻痺ビン追加",Level=1},
-                    new Skill(){Name="属性解放／装填拡張",Level=1},
-                    new Skill(){Name="通常弾・通常矢強化",Level=1},
-                    new Skill(){Name="龍封力強化",Level=4},
-                    new Skill(){Name="爆破ビン追加",Level=1},
-                    new Skill(){Name="毒ビン追加",Level=1}
-                }
-            );
-        }
-
         static bool FourSlotsCalculation(Skill skill, Set set, IEnumerable<Skill> searchSkillList, SetSearchCriteria setSearchCriteria)
         {
             switch (setSearchCriteria)
@@ -340,13 +298,6 @@ namespace mhw_4slots
                     return true;
                 }
             }
-            //Put in the respective slot first
-            if (set.RemainingSlots.Any(slot => slot.Level == _DecorationList.First(dec => dec.Level < 4 && dec.Skills[0].Name == skill.Name).Level))
-            {
-                set.AddDecoration(_DecorationList.First(dec => dec.Level < 4 && dec.Skills[0].Name == skill.Name));
-                return true;
-            }
-
             //switching slot from the lower skill of a decoration
             foreach (Decoration decoration in set.SlotsWithDecoration
                                                     .Where(s => s.Decoration.Level == 4 &&
@@ -396,6 +347,47 @@ namespace mhw_4slots
                 }
             }
             return false;
+        }
+
+        static void ReSetSet()
+        {
+            Set = new Set(
+                new Slot[]{
+                    new Slot(){Level=1},
+
+                    new Slot(){Level=2},
+                    new Slot(){Level=2},
+                    new Slot(){Level=2},
+                    new Slot(){Level=2},
+                    new Slot(){Level=2},
+
+
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+                    new Slot(){Level=3},
+
+                    new Slot(){Level=4},
+                    new Slot(){Level=4}
+                },
+                new Skill[]{
+                    new Skill(){Name="属性やられ耐性",Level=1},
+                    new Skill(){Name="属性解放／装填拡張",Level=1},
+                    new Skill(){Name="回避距離UP",Level=1},
+                    new Skill(){Name="攻撃",Level=1},
+                    new Skill(){Name="毒ビン追加",Level=1},
+                    new Skill(){Name="麻痺ビン追加",Level=2},
+                    new Skill(){Name="龍封力強化",Level=1},
+                    new Skill(){Name="ひるみ軽減",Level=1},
+                    new Skill(){Name="抜刀術【技】",Level=1},
+                    new Skill(){Name="無属性強化",Level=1},
+                    new Skill(){Name="火事場力",Level=1},
+                    new Skill(){Name="砲弾装填数UP",Level=1},
+                    new Skill(){Name="ランナー",Level=1},
+                    new Skill(){Name="雷耐性",Level=1},
+                }
+            );
         }
     }
     enum SetSearchCriteria
